@@ -1,0 +1,445 @@
+# ZephyrV2 Platform Design Document
+
+## 1. System Overview
+
+### 1.1 Purpose
+An advanced educational platform providing AI-powered learning assistance, offline-capable note-taking, intelligent scheduling, and comprehensive study tools for high school and college students.
+
+### 1.2 Core Features
+- Multi-specialized AI chatbots
+- Offline-capable note-taking system
+- Intelligent calendar and planning
+- Document analysis and summarization
+- Interactive math and physics tools
+- Online IDE with compilation support
+- Video/audio lecture analysis
+- Smart flashcards and test generation
+
+## 2. Technical Architecture
+
+### 2.1 Technology Stack
+
+#### Frontend
+- Web Application:
+  - Next.js 14+ with TypeScript
+  - Tailwind CSS
+  - shadcn/ui components
+  - WebAssembly (Rust)
+  - Service Workers for offline support
+  - IndexedDB & SQLite for local storage
+
+- Mobile Application:
+  - React Native
+  - SQLite for local storage
+  - Background services
+  - Push notifications
+
+#### Backend
+- API Gateway & Core Services (Go):
+  - Fiber/Chi for HTTP routing
+  - GORM for database operations
+  - JWT authentication
+  - Rate limiting
+  - Request validation
+
+- Real-time Services (Elixir):
+  - Phoenix Framework
+  - Phoenix Channels for WebSocket
+  - GenServer for state management
+  - PubSub system
+
+- Computation Services (Rust):
+  - Actix-web framework
+  - tokio for async runtime
+  - WebAssembly compilation
+  - Math computation engine
+
+- Cache & State Management (Gleam):
+  - Distributed state handling
+  - Cache management
+  - Data transformations
+
+### 2.2 Database & Storage
+
+#### Primary Database (PostgreSQL)
+- User accounts and authentication
+- Educational content
+- Application settings
+- Analytics data
+
+#### Cache Layer
+- Redis for distributed caching
+- Local browser cache
+- Service worker cache
+
+#### File Storage
+- S3/GCS for document storage
+- CDN for static assets
+- Local storage for offline access
+
+## 3. System Components
+
+### 3.1 AI System
+
+#### Chatbot Services
+- General Purpose Assistant
+  - General academic guidance
+  - Study tips and recommendations
+  - Research assistance
+
+- Math & Physics Assistant
+  - LaTeX equation rendering
+  - Graph visualization
+  - Step-by-step problem solving
+  - Interactive 3D visualization
+
+- Computer Science Assistant
+  - Code completion
+  - Syntax highlighting
+  - Multiple language support
+  - Online compilation
+
+- Document Analysis Assistant
+  - Multi-format support (PDF, DOCX, PPTX)
+  - Key point extraction
+  - Summary generation
+  - Citation management
+
+### 3.2 Offline-First System
+
+#### Local Storage
+- SQLite for structured data
+- IndexedDB for document cache
+- Service Worker for asset caching
+
+#### Sync System
+- Background sync for notes
+- Conflict resolution
+- Delta updates
+- Version control
+
+### 3.3 Calendar System
+
+#### Features
+- AI-powered schedule optimization
+- Study time allocation
+- Break reminders
+- Deadline management
+- Integration with external calendars
+
+#### Intelligence Layer
+- Machine learning for pattern recognition
+- Personalized scheduling
+- Workload balancing
+- Smart notifications
+
+## 4. Security & Privacy
+
+### 4.1 Authentication
+- JWT-based authentication
+- OAuth2 support
+- MFA integration
+- Session management
+
+### 4.2 Data Protection
+- End-to-end encryption for messages
+- At-rest encryption for stored data
+- Client-side encryption for offline data
+- Regular security audits
+
+## 5. Scalability & Performance
+
+### 5.1 Infrastructure
+- Docker containerization
+- Kubernetes orchestration
+- Horizontal scaling
+- Load balancing
+- CDN integration
+
+### 5.2 Performance Optimization
+- Edge caching
+- Lazy loading
+- Image optimization
+- Code splitting
+- WASM for compute-intensive tasks
+
+## 6. Monitoring & Analytics
+
+### 6.1 System Monitoring
+- Prometheus metrics
+- Grafana dashboards
+- Error tracking
+- Performance monitoring
+
+### 6.2 Usage Analytics
+- User engagement metrics
+- Feature usage tracking
+- Performance analytics
+- A/B testing support
+
+## 7. Development Workflow
+
+### 7.1 Version Control
+- Monorepo structure
+- Feature branching
+- Automated testing
+- CI/CD pipelines
+
+### 7.2 Documentation
+- API documentation
+- Component documentation
+- Architecture diagrams
+- Contribution guidelines
+
+## 8. Future Considerations
+
+### 8.1 Planned Features
+- AR/VR support for visualization
+- AI-powered study group matching
+- Integrated plagiarism detection
+- Advanced analytics dashboard
+
+### 8.2 Scalability Plans
+- Geographic expansion
+- Multi-tenant support
+- Custom deployment options
+- API marketplace
+
+## 9. Implementation Phases
+
+### Phase 1: Core Platform (3 months)
+- Basic user authentication
+- Note-taking system
+- General purpose AI chatbot
+- Basic calendar functionality
+
+### Phase 2: Advanced Features (3 months)
+- Specialized AI chatbots
+- Document analysis
+- Online IDE
+- Offline capabilities
+
+### Phase 3: Mobile & Integration (2 months)
+- Mobile app development
+- Third-party integrations
+- Advanced AI features
+- Performance optimization
+
+### Phase 4: Enhancement & Scale (2 months)
+- Advanced analytics
+- Additional AI capabilities
+- Scale infrastructure
+- Enhanced security features
+
+# ZephyrV2 Project Structure
+
+```
+zephyr-v2/
+├── .github/                          # GitHub specific configuration
+│   ├── workflows/                    # GitHub Actions CI/CD
+│   └── ISSUE_TEMPLATE/              # Issue templates
+│
+├── apps/                            # Application packages
+│   ├── web/                         # Next.js web application
+│   │   ├── src/
+│   │   │   ├── app/                # Next.js 14 app directory
+│   │   │   │   ├── (auth)/        # Authentication routes
+│   │   │   │   ├── (dashboard)/   # Dashboard routes
+│   │   │   │   ├── (marketing)/   # Marketing pages
+│   │   │   │   └── api/          # API routes
+│   │   │   ├── components/
+│   │   │   │   ├── ui/           # shadcn/ui components
+│   │   │   │   ├── features/     # Feature-specific components
+│   │   │   │   ├── layouts/      # Layout components
+│   │   │   │   └── providers/    # Context providers
+│   │   │   ├── lib/
+│   │   │   │   ├── wasm/        # Rust WASM modules
+│   │   │   │   ├── ai/          # AI service integrations
+│   │   │   │   ├── db/          # Database utilities
+│   │   │   │   └── utils/       # Utility functions
+│   │   │   ├── hooks/           # Custom React hooks
+│   │   │   ├── stores/          # State management
+│   │   │   ├── styles/          # Global styles
+│   │   │   └── types/           # TypeScript types
+│   │   ├── public/              # Static files
+│   │   └── tests/               # Web app tests
+│   │
+│   ├── mobile/                   # React Native application
+│   │   ├── src/
+│   │   │   ├── screens/         # Screen components
+│   │   │   ├── components/      # Shared components
+│   │   │   ├── navigation/      # Navigation configuration
+│   │   │   ├── services/        # Mobile services
+│   │   │   ├── hooks/          # Mobile hooks
+│   │   │   ├── stores/         # Mobile state
+│   │   │   └── types/          # Mobile types
+│   │   ├── android/            # Android specific
+│   │   └── ios/                # iOS specific
+│   │
+│   └── docs/                    # Documentation site
+│       ├── src/
+│       ├── content/
+│       └── public/
+│
+├── services/                    # Backend services
+│   ├── gateway/                # Go API Gateway
+│   │   ├── cmd/
+│   │   │   └── server/
+│   │   ├── internal/
+│   │   │   ├── auth/
+│   │   │   ├── middleware/
+│   │   │   ├── handlers/
+│   │   │   └── services/
+│   │   ├── pkg/
+│   │   └── tests/
+│   │
+│   ├── realtime/              # Elixir Real-time Service
+│   │   ├── lib/
+│   │   │   ├── zephyr/
+│   │   │   ├── channels/
+│   │   │   └── workers/
+│   │   └── test/
+│   │
+│   ├── compute/               # Rust Computation Service
+│   │   ├── src/
+│   │   │   ├── handlers/
+│   │   │   ├── services/
+│   │   │   └── utils/
+│   │   └── tests/
+│   │
+│   └── cache/                 # Gleam Cache Service
+│       ├── src/
+│       └── test/
+│
+├── packages/                  # Shared packages
+│   ├── ui/                   # Shared UI library
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── styles/
+│   │
+│   ├── ai/                   # AI utilities
+│   │   ├── src/
+│   │   │   ├── chat/
+│   │   │   ├── math/
+│   │   │   ├── code/
+│   │   │   └── document/
+│   │   └── tests/
+│   │
+│   ├── tsconfig/            # Shared TypeScript configs
+│   ├── eslint-config/       # Shared ESLint configs
+│   └── utils/               # Shared utilities
+│
+├── infrastructure/          # Infrastructure configuration
+│   ├── docker/
+│   │   ├── development/
+│   │   └── production/
+│   │
+│   ├── kubernetes/
+│   │   ├── base/
+│   │   ├── development/
+│   │   └── production/
+│   │
+│   └── terraform/          # IaC
+│       ├── environments/
+│       ├── modules/
+│       └── variables/
+│
+├── tools/                  # Development tools
+│   ├── generators/        # Code generators
+│   ├── scripts/          # Build/deployment scripts
+│   └── testing/          # Testing utilities
+│
+├── .editorconfig         # Editor configuration
+├── .gitignore           # Git ignore rules
+├── docker-compose.yml   # Local development setup
+├── package.json         # Root package.json
+├── pnpm-workspace.yaml  # PNPM workspace config
+├── turbo.json          # Turborepo config
+└── README.md           # Project documentation
+```
+
+## Key Configuration Files
+
+### Root Configuration
+
+```json
+// package.json
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.0"
+  }
+}
+```
+
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'services/*'
+```
+
+```json
+// turbo.json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
+```
+
+### Environment Configuration
+
+```env
+# .env.example
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_WS_URL=ws://localhost:4000
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/zephyr
+REDIS_URL=redis://localhost:6379
+```
+
+## Additional Considerations
+
+1. Each package and service will have its own:
+   - `package.json`
+   - Testing configuration
+   - TypeScript configuration
+   - Environment files
+
+2. Service-specific files:
+   - Go services: `go.mod` and `go.sum`
+   - Rust services: `Cargo.toml` and `Cargo.lock`
+   - Elixir services: `mix.exs`
+   - Gleam services: `gleam.toml`
+
+3. Documentation will be maintained in:
+   - Root level `README.md`
+   - Service-specific documentation
+   - API documentation
+   - Component documentation
+
+4. Development environment will be configured with:
+   - Docker Compose for local development
+   - Make commands for common tasks
+   - Development scripts in the `tools` directory

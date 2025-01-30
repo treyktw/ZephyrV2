@@ -1,0 +1,220 @@
+# ZephyrV2 Documentation Site Structure
+
+```
+apps/docs/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx                 # Root layout
+│   │   ├── page.tsx                   # Landing page
+│   │   └── [slug]/
+│   │       └── page.tsx               # Dynamic doc pages
+│   │
+│   ├── components/
+│   │   ├── navigation/
+│   │   │   ├── sidebar.tsx            # Documentation sidebar
+│   │   │   ├── navbar.tsx             # Top navigation
+│   │   │   └── breadcrumb.tsx         # Breadcrumb navigation
+│   │   │
+│   │   ├── content/
+│   │   │   ├── mdx-components.tsx     # MDX components
+│   │   │   ├── code-block.tsx         # Syntax highlighting
+│   │   │   └── table-of-contents.tsx  # Page TOC
+│   │   │
+│   │   └── search/
+│   │       └── doc-search.tsx         # Documentation search
+│   │
+│   ├── lib/
+│   │   ├── mdx.ts                     # MDX processing utilities
+│   │   └── search.ts                  # Search indexing
+│   │
+│   └── styles/
+│       └── docs.css                   # Documentation styles
+│
+├── content/
+│   ├── getting-started/
+│   │   ├── introduction.mdx
+│   │   ├── installation.mdx
+│   │   └── quick-start.mdx
+│   │
+│   ├── architecture/
+│   │   ├── overview.mdx
+│   │   ├── backend-services.mdx
+│   │   ├── frontend-architecture.mdx
+│   │   └── system-design.mdx
+│   │
+│   ├── features/
+│   │   ├── ai-assistants/
+│   │   │   ├── general-chat.mdx
+│   │   │   ├── math-physics.mdx
+│   │   │   └── code-assistant.mdx
+│   │   │
+│   │   ├── note-taking/
+│   │   │   ├── overview.mdx
+│   │   │   └── offline-sync.mdx
+│   │   │
+│   │   └── calendar/
+│   │       ├── overview.mdx
+│   │       └── ai-planning.mdx
+│   │
+│   ├── api-reference/
+│   │   ├── authentication.mdx
+│   │   ├── endpoints.mdx
+│   │   └── websockets.mdx
+│   │
+│   ├── deployment/
+│   │   ├── docker.mdx
+│   │   └── kubernetes.mdx
+│   │
+│   └── contributing/
+│       ├── setup.mdx
+│       ├── guidelines.mdx
+│       └── testing.mdx
+│
+└── public/
+    ├── images/
+    │   ├── architecture/
+    │   │   ├── system-overview.png
+    │   │   └── service-communication.png
+    │   │
+    │   ├── features/
+    │   │   └── screenshots/
+    │   │
+    │   └── diagrams/
+    │       └── flow-charts/
+    │
+    └── assets/
+        ├── fonts/
+        └── icons/
+```
+
+## Initial Content Structure
+
+### 1. Getting Started
+```markdown
+# Introduction
+- What is ZephyrV2
+- Key Features
+- System Requirements
+- License Information
+
+# Installation
+- Environment Setup
+- Dependencies
+- Configuration
+- First-time Setup
+
+# Quick Start
+- Basic Usage
+- Common Operations
+- Example Workflows
+```
+
+### 2. Architecture
+```markdown
+# System Overview
+- High-level Architecture
+- Key Components
+- Data Flow
+- Security Model
+
+# Backend Services
+- Service Descriptions
+- Communication Patterns
+- Data Models
+- Storage Solutions
+
+# Frontend Architecture
+- Component Structure
+- State Management
+- Navigation Flow
+- Offline Capabilities
+```
+
+### 3. Features
+```markdown
+# AI Assistants
+- General Chat
+  - Capabilities
+  - Usage Examples
+  - Best Practices
+  
+- Math & Physics
+  - Available Tools
+  - Equation Support
+  - Visualization Options
+  
+- Code Assistant
+  - Supported Languages
+  - IDE Features
+  - Compilation Process
+
+# Note Taking
+- Basic Operations
+- Offline Support
+- Sync Mechanism
+- Data Security
+
+# Calendar
+- Smart Scheduling
+- AI Integration
+- Event Management
+- Notification System
+```
+
+### 4. API Reference
+```markdown
+# Authentication
+- Auth Flow
+- Token Management
+- Security Measures
+
+# Endpoints
+- REST APIs
+- GraphQL Schema
+- Rate Limits
+
+# WebSockets
+- Real-time Features
+- Connection Management
+- Event Types
+```
+
+### 5. Deployment
+```markdown
+# Docker
+- Container Structure
+- Image Building
+- Development Setup
+
+# Kubernetes
+- Cluster Setup
+- Service Deployment
+- Scaling Strategies
+```
+
+### 6. Contributing
+```markdown
+# Setup
+- Development Environment
+- Tool Installation
+- Code Structure
+
+# Guidelines
+- Coding Standards
+- Git Workflow
+- Review Process
+
+# Testing
+- Test Strategy
+- Writing Tests
+- CI/CD Pipeline
+```
+
+## Next Steps for Documentation
+
+1. Create base templates for each document type
+2. Set up MDX configuration and plugins
+3. Implement search functionality
+4. Create interactive code examples
+5. Add API documentation generation
+6. Set up versioning system

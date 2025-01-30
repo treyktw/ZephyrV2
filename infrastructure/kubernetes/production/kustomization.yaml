@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../base
+
+namespace: zephyr-prod
+
+resources:
+  - namespace.yaml
+
+patches:
+  - path: patches/replicas.yaml
+  - path: patches/resources.yaml
