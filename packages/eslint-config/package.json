@@ -6,7 +6,6 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
-    "@zephyr/eslint-config": "file:",
     "eslint-config-next": "^14.0.3",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",

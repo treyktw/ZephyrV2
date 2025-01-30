@@ -7,8 +7,5 @@
     "nextjs.json",
     "react-library.json",
     "react-native.json"
-  ],
-  "dependencies": {
-    "@zephyr/tsconfig": "file:"
-  }
+  ]
 }

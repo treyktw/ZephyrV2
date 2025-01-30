@@ -5,6 +5,7 @@
   "main": "./src/index.tsx",
   "types": "./src/index.tsx",
   "dependencies": {
+    "@zephyr/ui": "file:",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.1.0"
