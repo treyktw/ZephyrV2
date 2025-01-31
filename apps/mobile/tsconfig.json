@@ -1,11 +1,17 @@
 {
-  "extends": "@zephyr/tsconfig/react-native.json",
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "baseUrl": ".",
+    "strict": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["src", "index.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

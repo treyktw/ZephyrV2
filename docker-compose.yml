@@ -1,48 +1,29 @@
 version: '3.8'
 
 services:
-  gateway:
-    build:
-      context: ./services/gateway
-      dockerfile: Dockerfile
+  nginx:
+    image: nginx:alpine
     ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgres://zephyr:zephyrdev@postgres:5432/zephyr
-      - REDIS_URL=redis://redis:6379
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/logs:/var/log/nginx
     depends_on:
-      - postgres
-      - redis
+      - web
+    networks:
+      - zephyr_network
 
-  compute:
+  web:
     build:
-      context: ./services/compute
+      context: ./web
       dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
     environment:
-      - DATABASE_URL=postgres://zephyr:zephyrdev@postgres:5432/zephyr
-
-  realtime:
-    build:
-      context: ./services/realtime
-      dockerfile: Dockerfile
-    ports:
-      - "3002:3002"
-    environment:
-      - DATABASE_URL=postgres://zephyr:zephyrdev@postgres:5432/zephyr
-      - REDIS_URL=redis://redis:6379
-
-  cache:
-    build:
-      context: ./services/cache
-      dockerfile: Dockerfile
-    ports:
-      - "3003:3003"
-    environment:
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - redis
+      - NODE_ENV=production
+    networks:
+      - zephyr_network
 
   postgres:
     image: postgres:16-alpine
@@ -50,19 +31,23 @@ services:
       POSTGRES_USER: zephyr
       POSTGRES_PASSWORD: zephyrdev
       POSTGRES_DB: zephyr
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - zephyr_network
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - zephyr_network
+
+networks:
+  zephyr_network:
+    driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
-
+  nginx_logs:
