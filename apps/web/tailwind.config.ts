@@ -9,6 +9,24 @@ export default {
   ],
   theme: {
   	extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            'code': {
+              backgroundColor: 'var(--tw-prose-pre-bg)',
+              padding: '0.25rem 0.375rem',
+              borderRadius: '0.25rem',
+              fontSize: '0.875em',
+            },
+            'ol > li': {
+              paddingLeft: '0.25rem',
+            },
+            'ul > li': {
+              paddingLeft: '0.25rem',
+            },
+          },
+        },
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
