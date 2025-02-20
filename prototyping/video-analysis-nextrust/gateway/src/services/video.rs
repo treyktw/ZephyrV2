@@ -142,4 +142,6 @@ impl VideoService {
     pub fn get_archive_service(&self) -> Arc<ArchiveService> {
         self.archive_service.clone()
     }
+
+    // add singlestore connection
 }
