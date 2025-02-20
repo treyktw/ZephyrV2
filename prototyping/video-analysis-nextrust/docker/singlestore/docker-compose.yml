@@ -1,0 +1,31 @@
+services:
+  singlestore:
+    image: singlestore/cluster-in-a-box:latest
+    # platform: linux/amd64  # Specific platform for M1/M2 Macs
+    container_name: singlestore-dev
+    ports:
+      - "3306:3306"  # MySQL protocol
+      - "8080:8080"  # HTTP API
+      - "9240:9240"  # Management API
+    environment:
+      - LICENSE_KEY=BDE0YmJhYTk1MWE5ZDRjMWE4MjdmNDFmZjg1NWRjOGNkAAAAAAAAAAAEAAAAAAAAACgwNgIZAKPgrvvHTCqs3XI+yYGiUXOyxv+mFhgN1wIZAPv4prUSZ3YeTir5vuUs0mr13Cc0Q0yeoA==
+      - ROOT_PASSWORD=password  # Set your password here
+      - START_AFTER_INIT=Y
+      - MEMSQL_VMM=Y
+    healthcheck:
+      test: ["CMD", "memsql-admin", "ping", "--host=127.0.0.1", "--port=3306"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 8G  # Adjust based on your needs
+        reservations:
+          memory: 4G  # Minimum required memory
+
+
+networks:
+  default:
+    name: video-analysis-network
+    driver: bridge
