@@ -1,0 +1,15 @@
+# frontend/Dockerfile.dev
+FROM oven/bun:1.0.29-slim
+
+WORKDIR /app
+
+# Only copy package files first
+COPY package.json ./
+COPY bun.lockb ./
+
+# Install dependencies
+RUN bun install
+
+# Start with a development command
+# We'll mount the source code as a volume instead of copying it
+CMD ["bun", "run", "dev"]

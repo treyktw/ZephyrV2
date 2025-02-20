@@ -1,8 +1,9 @@
 // components/chat/Input.tsx
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { SendHorizontal } from 'lucide-react';
+import { SendHorizontal, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ChatInputProps {
   onSubmit: (message: string) => void;
@@ -11,7 +12,27 @@ interface ChatInputProps {
 
 export function ChatInput({ onSubmit, isLoading }: ChatInputProps) {
   const [message, setMessage] = useState('');
+  const [rows, setRows] = useState(1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  const adjustTextareaHeight = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = 'auto';
+    const newHeight = Math.min(textarea.scrollHeight, 200);
+    textarea.style.height = `${newHeight}px`;
+
+    // Update rows based on content
+    const lineHeight = 24; // Approximate line height in pixels
+    const newRows = Math.min(Math.ceil(newHeight / lineHeight), 8);
+    setRows(newRows);
+  }, []);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [message, adjustTextareaHeight]);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -19,13 +40,13 @@ export function ChatInput({ onSubmit, isLoading }: ChatInputProps) {
     const trimmedMessage = message.trim();
     if (!trimmedMessage || isLoading) return;
 
-    console.log('Submitting message:', trimmedMessage); // Debug log
     onSubmit(trimmedMessage);
     setMessage('');
 
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
+      setRows(1);
     }
   }, [message, isLoading, onSubmit]);
 
@@ -45,16 +66,27 @@ export function ChatInput({ onSubmit, isLoading }: ChatInputProps) {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type a message..."
-          className="min-h-[44px] max-h-[200px]"
+          className={cn(
+            "min-h-[44px] max-h-[200px] resize-none",
+            isLoading && "opacity-50"
+          )}
           disabled={isLoading}
-          rows={1}
+          rows={rows}
         />
         <Button
           type="submit"
           size="icon"
           disabled={isLoading || !message.trim()}
+          className={cn(
+            "transition-all duration-200",
+            isLoading && "opacity-50"
+          )}
         >
-          <SendHorizontal className="h-4 w-4" />
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <SendHorizontal className="h-4 w-4" />
+          )}
         </Button>
       </div>
     </form>

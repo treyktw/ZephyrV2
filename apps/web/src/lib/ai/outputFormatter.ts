@@ -28,39 +28,60 @@ export class OutputFormatter {
   private currentToken: string = "";
   private currentIndex: number = 0;
   private isFirstToken: boolean = true;
-  private buffer: string = '';
-  private currentParagraph: string = '';
+  private buffer: string = "";
+  private currentParagraph: string = "";
   private isInParagraph: boolean = false;
   private readonly SENTENCE_ENDINGS = /[.!?]/;
 
   constructor() {}
 
   processToken(token: string): { displayContent: string } {
-    // Add character to our current paragraph buffer
-    this.currentParagraph += token;
+    console.log('Processing token:', token);
+    this.currentToken = token;
 
-    // If we're not in a paragraph, start one
-    if (!this.isInParagraph) {
-      this.chatContent = this.chatContent + '<p>';
-      this.isInParagraph = true;
-    }
+    // Check for complete code block in token
+    if (token.includes("```")) {
+      const codeBlockMatches = token.match(/```(\w+)?([\s\S]*?)```/g);
 
-    // Check for sentence endings
-    if (this.SENTENCE_ENDINGS.test(token)) {
-      // Look ahead for space + capital letter pattern
-      const nextChar = this.peekNextChar();
-      if (nextChar && /\s/.test(nextChar)) {
-        const afterNext = this.peekNextChar();
-        if (afterNext && /[A-Z]/.test(afterNext)) {
-          // Close current paragraph and start new one
-          this.chatContent = this.chatContent + this.currentParagraph + '</p><p>';
-          this.currentParagraph = '';
-        }
+      if (codeBlockMatches) {
+        // Handle complete code blocks in one token
+        codeBlockMatches.forEach(block => {
+          const langMatch = block.match(/```(\w+)?/);
+          const language = langMatch?.[1] || "typescript";
+          const content = block.replace(/```(\w+)?\n?/, '').replace(/```$/, '');
+
+          this.language = language;
+          this.isCodeBlock = true;
+          this.codeContent = content;
+
+          // Create artifact for this block
+          if (!this.artifactId) {
+            this.createNewArtifact();
+          }
+
+          // Update artifact with content
+          if (this.artifactId) {
+            useArtifact.getState().updateArtifactContent(
+              this.artifactId,
+              content
+            );
+          }
+        });
       }
+      return { displayContent: this.chatContent };
     }
 
-    // Add the current paragraph content to chat content
-    this.chatContent = this.currentParagraph;
+    // Normal text processing
+    let processedContent = token;
+    processedContent = this.processTextContent(processedContent);
+    processedContent = this.formatTextContent(processedContent);
+    processedContent = this.processInteractiveElements(processedContent);
+
+    if (this.chatContent === '') {
+      this.chatContent = `<p>${processedContent}`;
+    } else {
+      this.chatContent += processedContent;
+    }
 
     return { displayContent: this.chatContent };
   }
@@ -91,12 +112,16 @@ export class OutputFormatter {
   }
 
   private handleCodeBlockStart(token: string): { displayContent: string } {
+    console.log("Starting code block, token:", token);
     const fileMatch = token.match(/\/\/(.*?)\n/);
     const langMatch = token.match(/```(\w+)/);
 
     this.language = langMatch?.[1] || "typescript";
     this.currentFile = fileMatch?.[1]?.trim() ?? null;
     this.isCodeBlock = true;
+    this.codeContent = "";
+
+    console.log("Creating new code block with language:", this.language);
 
     if (!this.artifactId) {
       this.createNewArtifact();
@@ -105,14 +130,34 @@ export class OutputFormatter {
     return { displayContent: this.chatContent };
   }
 
+  private handleCodeContent(token: string): { displayContent: string } {
+    console.log("Adding to code block:", token);
+    this.codeContent += token;
+
+    if (this.artifactId) {
+      console.log("Updating artifact with content:", this.codeContent);
+      useArtifact
+        .getState()
+        .updateArtifactContent(this.artifactId, this.codeContent);
+    }
+
+    return { displayContent: this.chatContent };
+  }
+
   private handleCodeBlockEnd(): { displayContent: string } {
-    this.codeBlocks.push({
-      language: this.language,
-      content: this.codeContent.trim(),
-      file: this.currentFile ?? undefined,
-    });
+    console.log("Ending code block with content:", this.codeContent);
+
+    if (this.codeContent.trim().length > 0) {
+      this.codeBlocks.push({
+        language: this.language,
+        content: this.codeContent.trim(),
+        file: this.currentFile ?? undefined,
+      });
+    }
 
     const formattedContent = this.formatCodeBlocks();
+    console.log("Formatted content:", formattedContent);
+
     if (this.artifactId) {
       useArtifact
         .getState()
@@ -120,17 +165,6 @@ export class OutputFormatter {
     }
 
     this.resetCodeState();
-    return { displayContent: this.chatContent };
-  }
-
-  private handleCodeContent(token: string): { displayContent: string } {
-    this.codeContent += token;
-    if (this.artifactId) {
-      const formattedContent = this.formatCodeBlocks() + this.codeContent;
-      useArtifact
-        .getState()
-        .updateArtifactContent(this.artifactId, formattedContent);
-    }
     return { displayContent: this.chatContent };
   }
 
@@ -197,12 +231,17 @@ export class OutputFormatter {
   private formatCodeBlocks(): string {
     if (this.codeBlocks.length === 0) return "";
 
-    return this.codeBlocks
+    // Only format if we have actual content
+    const validBlocks = this.codeBlocks.filter(
+      (block) => block.content.trim().length > 0,
+    );
+
+    return validBlocks
       .map((block) => {
         const fileHeader = block.file ? `// File: ${block.file}\n` : "";
-        return `${fileHeader}${block.content}\n\n`;
+        return `${fileHeader}${block.content.trim()}`;
       })
-      .join("// ----------------------------------------\n\n");
+      .join("\n\n");
   }
 
   private processInteractiveElements(text: string): string {
@@ -223,17 +262,20 @@ export class OutputFormatter {
 
   private createNewArtifact(): void {
     this.artifactId = nanoid();
+
     useArtifact.getState().addArtifact({
       id: this.artifactId,
-      content: "",
+      content: this.codeContent || "// Loading code...",
       type: "code",
-      title: "Code Example",
+      title: `Code Example - ${this.language}`,
       metadata: {
         language: this.language,
         streaming: true,
         files: [],
       },
     });
+
+    this.artifactIds.add(this.artifactId);
     this.chatContent += `<ViewCode id="${this.artifactId}" />`;
   }
 
@@ -366,16 +408,16 @@ export class OutputFormatter {
 
   finalize() {
     if (this.isInParagraph) {
-      this.chatContent += '</p>';
+      this.chatContent += "</p>";
       this.isInParagraph = false;
     }
 
     // Close any other open tags (from existing finalize logic)
     if (this.markdownState.inInlineCode) {
-      this.chatContent += '</code>';
+      this.chatContent += "</code>";
     }
     if (this.markdownState.inBold) {
-      this.chatContent += '</strong>';
+      this.chatContent += "</strong>";
     }
 
     // Close any open markdown tags first

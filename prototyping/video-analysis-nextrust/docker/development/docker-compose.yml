@@ -1,0 +1,54 @@
+# docker/development/docker-compose.yml
+services:
+  rust-gateway:
+    build:
+      context: ../../backend/gateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../data:/data
+      - ../../backend/gateway:/app
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - UPLOAD_DIR=/data/videos
+    depends_on:
+      - redis
+
+  go-processing:
+    build:
+      context: ../../backend/go-processing
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ../../data:/data
+      - ../../backend/go-processing:/app
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - UPLOAD_DIR=/data/videos
+      - FRAMES_DIR=/data/frames
+    depends_on:
+      - redis
+
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../frontend:/app
+      - /app/node_modules # This prevents the node_modules from being overwritten
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+    depends_on:
+      - rust-gateway
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:

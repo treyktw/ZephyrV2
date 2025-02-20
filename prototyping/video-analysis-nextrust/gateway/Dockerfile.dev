@@ -1,0 +1,13 @@
+# backend/rust-gateway/Dockerfile.dev
+FROM rust:1.75
+
+WORKDIR /app
+
+# Install a specific version of cargo-watch that's compatible
+RUN cargo install --locked cargo-watch --version 8.4.0
+
+# Copy source code
+COPY . .
+
+# Run with cargo watch
+CMD ["cargo", "watch", "-x", "run"]

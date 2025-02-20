@@ -2,7 +2,7 @@
 export class LLMClient {
   private baseUrl: string;
 
-  constructor(baseUrl = 'http://localhost:11434') {
+  constructor(baseUrl = 'http://192.168.0.76:11434') {
     this.baseUrl = baseUrl;
   }
 

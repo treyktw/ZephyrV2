@@ -1,0 +1,42 @@
+<!-- test.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phoenix Socket Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phoenix/1.7.0/phoenix.min.js"></script>
+</head>
+<body>
+    <div>
+        <input id="message" type="text" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <div id="messages"></div>
+
+    <script>
+        // Connect to Phoenix socket
+        const socket = new Phoenix.Socket("ws://localhost:4000/socket");
+        socket.connect();
+
+        // Join the chat channel
+        const channel = socket.channel("chat:123", {}); // 123 is a test chat ID
+
+        channel.join()
+            .receive("ok", resp => { console.log("Joined successfully", resp) })
+            .receive("error", resp => { console.log("Unable to join", resp) });
+
+        // Handle incoming messages
+        channel.on("ai_token", payload => {
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML += `<p>Received: ${payload.token}</p>`;
+        });
+
+        // Send message function
+        function sendMessage() {
+            const input = document.getElementById("message");
+            channel.push("new_message", { content: input.value })
+                .receive("ok", (msg) => console.log("Message sent:", msg));
+            input.value = '';
+        }
+    </script>
+</body>
+</html>

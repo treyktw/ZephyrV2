@@ -1,0 +1,12 @@
+# backend/go-processor/Dockerfile.dev
+FROM golang:1.21
+
+WORKDIR /app
+
+# Install air version compatible with Go 1.21
+RUN go install github.com/cosmtrek/air@v1.40.4
+
+# Copy air config
+COPY .air.toml .
+
+CMD ["air"]

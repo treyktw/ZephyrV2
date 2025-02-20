@@ -8,5 +8,12 @@ import * as schema from './schema';
 const sql = neon(process.env.DATABASE_URL || "postgresql://neondb_owner:npg_FGh68VxabZRM@ep-super-term-a4orbpbl-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require");
 export const db = drizzle(sql, {schema});
 
+
+
+
 // Add type exports
 export type Database = typeof db;
+
+export * from './dexie';
+export * from './redis';
+export * from './pinecone';

@@ -1,0 +1,59 @@
+# docker/typescript/Dockerfile
+FROM node:18-slim
+
+# Create non-root user
+RUN groupadd -r compiler && useradd -r -g compiler compiler
+
+# Create workspace directory
+WORKDIR /workspace
+
+# Create package.json
+RUN echo '{\
+  "name": "typescript-compiler",\
+  "version": "1.0.0",\
+  "type": "commonjs",\
+  "dependencies": {\
+    "typescript": "^5.0.0",\
+    "ts-node": "^10.9.0",\
+    "@types/node": "^20.0.0"\
+  }\
+}' > package.json
+
+# Create tsconfig.json
+RUN echo '{\
+  "compilerOptions": {\
+    "target": "es2022",\
+    "module": "commonjs",\
+    "moduleResolution": "node",\
+    "esModuleInterop": true,\
+    "strict": true,\
+    "skipLibCheck": true,\
+    "allowJs": true,\
+    "outDir": "./dist"\
+  },\
+  "include": ["*.ts"],\
+  "exclude": ["node_modules"]\
+}' > tsconfig.json
+
+# Install dependencies
+RUN npm install && \
+    npm install -g typescript ts-node @types/node
+
+# Set permissions
+RUN chown -R compiler:compiler /workspace && \
+    chmod -R 755 /workspace && \
+    mkdir -p /home/compiler/.npm && \
+    chown -R compiler:compiler /home/compiler/.npm && \
+    chmod -R 755 /home/compiler/.npm
+
+# Switch to non-root user
+USER compiler
+
+# Verify the setup without ts-node
+RUN echo 'console.log("TypeScript setup verification")' > test.ts && \
+    tsc test.ts && \
+    node test.js && \
+    rm test.ts test.js
+
+# Keep container running
+CMD ["tail", "-f", "/dev/null"]

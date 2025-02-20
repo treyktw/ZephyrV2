@@ -1,0 +1,15 @@
+# docker/rust/Dockerfile
+FROM rust:1.75-slim
+
+# Create non-root user with dynamic UID
+RUN groupadd -r compiler && useradd -r -g compiler compiler
+
+# Create workspace directory
+WORKDIR /workspace
+RUN chown compiler:compiler /workspace
+
+# Switch to non-root user
+USER compiler
+
+# Keep container running
+CMD ["tail", "-f", "/dev/null"]

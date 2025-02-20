@@ -1,0 +1,17 @@
+# .dockerignore
+node_modules
+.next
+.git
+*.log
+.env*
+dist
+build
+coverage
+.DS_Store
+.idea
+*.md
+.cache
+tmp
+.turbo
+.vercel
+*.tsbuildinfo

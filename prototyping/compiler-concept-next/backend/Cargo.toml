@@ -1,0 +1,68 @@
+[package]
+name = "prototyping"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Web framework
+actix-web = "4.4"
+actix-cors = "0.6"
+actix-rt = "2.9"
+
+# Docker interaction
+bollard = "0.15"
+
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Redis
+redis = { version = "0.24", features = ["tokio-comp", "connection-manager"] }
+
+# Logging and monitoring
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# UUID generation
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Environment variables
+dotenv = "0.15"
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Async traits
+async-trait = "0.1"
+
+# For handling temporary files and directories
+tempfile = "3.9"
+
+# For resource monitoring
+sysinfo = "0.30"
+
+# HTTP client for internal service communication
+reqwest = { version = "0.11", features = ["json"] }
+futures-util = "0.3.31"
+sha256 = "1.5.0"
+bb8-redis = "0.20.0"
+backoff = { version = "0.4.0", features = ["futures", "tokio"] }
+governor = "0.8.0"
+futures = "0.3.31"
+
+
+[dev-dependencies]
+# Testing
+tokio-test = "0.4"
+mockall = "0.12"
+test-log = "0.2"
+env_logger = "0.10"
+
+

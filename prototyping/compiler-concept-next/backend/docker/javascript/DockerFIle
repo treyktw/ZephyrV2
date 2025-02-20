@@ -1,0 +1,18 @@
+# docker/javascript/Dockerfile
+FROM node:18-slim
+
+# Create non-root user
+RUN groupadd -r compiler && useradd -r -g compiler compiler
+
+# Create workspace directory
+WORKDIR /workspace
+RUN chown compiler:compiler /workspace
+
+# Install TypeScript
+RUN npm install -g typescript
+
+# Switch to non-root user
+USER compiler
+
+# Keep container running
+CMD ["tail", "-f", "/dev/null"]

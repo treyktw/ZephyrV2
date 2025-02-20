@@ -14,13 +14,14 @@ export type MessageType =
   export interface Message {
     id: string;
     chatId: string;
-    content: MessageContent | string;
+    content: string;
     type: MessageType;
     isUser: boolean;
     createdAt: Date;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata?: any;
     messages?:  MessageContent;
+    streaming?: boolean
   }
 
 export interface MessageContent {
@@ -63,7 +64,7 @@ export interface Chat {
   }>;
   systemPrompt?: string;
   lastMessage: string;
-  
+
 }
 
 export interface LLMConfig {
