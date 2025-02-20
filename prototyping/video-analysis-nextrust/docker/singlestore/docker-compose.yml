@@ -1,7 +1,7 @@
 services:
   singlestore:
     image: singlestore/cluster-in-a-box:latest
-    # platform: linux/amd64  # Specific platform for M1/M2 Macs
+    # platform: linux/amd64  # Specific platform for M2/M3 Macs
     container_name: singlestore-dev
     ports:
       - "3306:3306"  # MySQL protocol
