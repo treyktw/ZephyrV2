@@ -1,4 +1,4 @@
-package services
+package storage
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 )
 
 type RedisClient struct {
-	client *redis.Client
+	Client *redis.Client
 }
 
 func NewRedisClient(redisURL string) (*RedisClient, error) {
@@ -32,12 +32,12 @@ func NewRedisClient(redisURL string) (*RedisClient, error) {
 	}
 
 	return &RedisClient{
-		client: client,
+		Client: client,
 	}, nil
 }
 
 func (r *RedisClient) GetVideo(ctx context.Context, id string) (*models.Video, error) {
-	videoJSON, err := r.client.Get(ctx, fmt.Sprintf("video:%s", id)).Result()
+	videoJSON, err := r.Client.Get(ctx, fmt.Sprintf("video:%s", id)).Result()
 	if err != nil {
 		if err == redis.Nil {
 			return nil, fmt.Errorf("video not found: %s", id)
@@ -59,7 +59,7 @@ func (r *RedisClient) UpdateVideo(ctx context.Context, video *models.Video) erro
 		return fmt.Errorf("failed to marshal video: %w", err)
 	}
 
-	if err := r.client.Set(ctx, fmt.Sprintf("video:%s", video.ID), videoJSON, 0).Err(); err != nil {
+	if err := r.Client.Set(ctx, fmt.Sprintf("video:%s", video.ID), videoJSON, 0).Err(); err != nil {
 		return fmt.Errorf("failed to update video in Redis: %w", err)
 	}
 
@@ -78,7 +78,7 @@ func (r *RedisClient) WatchNewVideos(ctx context.Context) (<-chan string, error)
 				return
 			default:
 				// Try to get new video from Redis list
-				result, err := r.client.BLPop(ctx, 0, "video_queue").Result()
+				result, err := r.Client.BLPop(ctx, 0, "video_queue").Result()
 				if err != nil {
 					if err != context.Canceled {
 						fmt.Printf("Error watching videos: %v\n", err)

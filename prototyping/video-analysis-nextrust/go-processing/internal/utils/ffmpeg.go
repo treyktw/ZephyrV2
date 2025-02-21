@@ -2,12 +2,40 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
+	"image"
+	"os"
 	"os/exec"
+
+	"github.com/google/uuid"
 )
+
+type FFmpeg struct {
+	// Add any configuration if needed
+}
+
+func NewFFmpeg() *FFmpeg {
+	return &FFmpeg{}
+}
 
 func CheckFFmpeg() error {
 	cmd := exec.Command("ffmpeg", "-version")
 	return cmd.Run()
+}
+
+func LoadImage(path string) (image.Image, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open image: %w", err)
+	}
+	defer file.Close()
+
+	img, _, err := image.Decode(file)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode image: %w", err)
+	}
+
+	return img, nil
 }
 
 func GetVideoInfo(path string) (map[string]interface{}, error) {
@@ -19,7 +47,7 @@ func GetVideoInfo(path string) (map[string]interface{}, error) {
 		"-show_streams",
 		path,
 	)
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, err
@@ -31,4 +59,8 @@ func GetVideoInfo(path string) (map[string]interface{}, error) {
 	}
 
 	return info, nil
+}
+
+func GenerateUUID() string {
+	return uuid.New().String()
 }

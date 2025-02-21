@@ -9,11 +9,13 @@ import (
 	"time"
 
 	"zephyrV2/internal/config"
-	"zephyrV2/internal/services"
+	"zephyrV2/internal/services/storage"
+	"zephyrV2/internal/services/video"
 	"zephyrV2/internal/utils"
 )
 
 func main() {
+
 	// Setup logging with timestamp and file info
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Println("Starting video processor service...")
@@ -47,10 +49,10 @@ func main() {
 	log.Printf("Upload directory: %s", cfg.UploadsDir)
 
 	// Initialize Redis client with retry
-	var redis *services.RedisClient
+	var redis *storage.RedisClient
 	var err error
 	for attempts := 1; attempts <= 5; attempts++ {
-		redis, err = services.NewRedisClient(cfg.RedisURL)
+		redis, err = storage.NewRedisClient(cfg.RedisURL)
 		if err == nil {
 			break
 		}
@@ -63,7 +65,7 @@ func main() {
 	log.Println("Successfully connected to Redis")
 
 	// Initialize video service
-	videoService := services.NewVideoService(
+	videoService := video.NewVideoService(
 		cfg.UploadsDir,
 		cfg.FramesDir,
 		redis,
@@ -76,8 +78,12 @@ func main() {
 	)
 
 	// Create context with cancellation
+	// errorHandler := errors.NewErrorHandler(log.Default())
+
+	// Start error processing
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	// errorHandler.StartProcessing(ctx)
 
 	// Error channel for service errors
 	errChan := make(chan error, 1)

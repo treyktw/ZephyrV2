@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"zephyrV2/internal/services/frame"
+	"zephyrV2/internal/services/storage"
 
 	"github.com/joho/godotenv"
 )
@@ -15,6 +17,13 @@ type Config struct {
 	FramesDir   string
 	FrameRate   float64
 	JpegQuality int
+}
+
+type ProcessorConfigVideo struct {
+	UploadsDir      string
+	FramesDir       string
+	RedisClient     *storage.RedisClient
+	ExtractorConfig frame.ExtractorConfig
 }
 
 func Load() *Config {
