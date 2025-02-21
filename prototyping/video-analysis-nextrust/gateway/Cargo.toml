@@ -18,8 +18,9 @@ env_logger = "0.10"
 log = "0.4"
 thiserror = "1.0"
 anyhow = "1.0"
-chrono = "0.4.39"
+chrono = { version = "0.4", features = ["serde"] }
 zip = "2.2.2"
 futures-util = "0.3.31"
 aio = "0.1.0"
+sqlx = { version = "0.8.3", features = ["runtime-tokio-rustls", "mysql", "json", "chrono"] }
 

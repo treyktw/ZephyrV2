@@ -88,7 +88,11 @@ async fn main() -> std::io::Result<()> {
                     .service(handlers::health::health_check)
                     .service(handlers::video::upload_video)
                     .service(handlers::video::archive_video) // Add archive endpoint
-                    .service(handlers::video::restore_video), // Add restore endpoint
+                    .service(handlers::video::restore_video) // Add restore endpoint
+                    .service(handlers::vector::search_vectors)
+                    .service(handlers::vector::index_vector)
+                    .service(handlers::vector::get_vector)
+                    .service(handlers::vector::batch_index_vectors),
             )
     })
     .bind(("127.0.0.1", config.port))?
