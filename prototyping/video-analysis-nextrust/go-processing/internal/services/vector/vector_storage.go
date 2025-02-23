@@ -11,10 +11,10 @@ import (
 )
 
 type VectorStorage interface {
-	StoreVector(ctx context.Context, id string, vector []float32, metadata map[string]interface{}) error
-	GetVector(ctx context.Context, id string) ([]float32, error)
-	FindSimilar(ctx context.Context, vector []float32, limit int) ([]models.Frame, error)
+	StoreVector(ctx context.Context, id string, vector []float32) error
 	BatchStore(ctx context.Context, vectors map[string][]float32) error
+	FindSimilar(ctx context.Context, vector []float32, limit int) ([]string, error)
+	GetVector(ctx context.Context, id string) ([]float32, error)
 }
 
 type SingleStoreVectorStorage struct {

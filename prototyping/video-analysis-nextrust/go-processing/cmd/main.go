@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"log"
 	"os"
 	"os/signal"
@@ -9,13 +10,19 @@ import (
 	"time"
 
 	"zephyrV2/internal/config"
+	"zephyrV2/internal/services/frame"
+	"zephyrV2/internal/services/ml"
 	"zephyrV2/internal/services/storage"
+	"zephyrV2/internal/services/vector"
 	"zephyrV2/internal/services/video"
 	"zephyrV2/internal/utils"
 )
 
-func main() {
+type SingleStoreDB struct {
+	DB *sql.DB
+}
 
+func main() {
 	// Setup logging with timestamp and file info
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Println("Starting video processor service...")
@@ -31,9 +38,11 @@ func main() {
 	// Log config values
 	log.Printf("Configuration loaded: \n"+
 		"Redis URL: %s\n"+
+		"SingleStore URL: %s\n"+
 		"Uploads Directory: %s\n"+
 		"Frames Directory: %s\n",
 		cfg.RedisURL,
+		cfg.SingleStore.URL,
 		cfg.UploadsDir,
 		cfg.FramesDir,
 	)
@@ -44,9 +53,6 @@ func main() {
 			log.Fatalf("Failed to create directory %s: %v", dir, err)
 		}
 	}
-
-	// go-processor/main.go
-	log.Printf("Upload directory: %s", cfg.UploadsDir)
 
 	// Initialize Redis client with retry
 	var redis *storage.RedisClient
@@ -64,13 +70,52 @@ func main() {
 	}
 	log.Println("Successfully connected to Redis")
 
-	// Initialize video service
-	videoService := video.NewVideoService(
+	// Initialize SingleStore connection
+	log.Println("Connecting to SingleStore...")
+	db, err := sql.Open("mysql", cfg.SingleStore.URL)
+	if err != nil {
+		log.Fatalf("Failed to create SingleStore connection: %v", err)
+	}
+	defer db.Close()
+
+	singleStoreDB := storage.NewSingleStoreDBWithConnection(db)
+	if err != nil {
+		log.Fatalf("Failed to initialize SingleStore: %v", err)
+	}
+
+	// Create vector configuration
+	vectorConfig := vector.GeneratorConfig{
+		BatchSize:    100,
+		VectorSize:   384,
+		UseGPU:       false,
+		MaxBatchSize: 32,
+	}
+
+	// Initialize dependencies for frame processor
+	processorConfig := frame.ProcessorConfig{
+		BatchSize:        100,
+		MaxGoroutines:    4,
+		QualityThreshold: 0.7,
+		FrameRate:        cfg.FrameRate,
+	}
+
+	vectorIndex := storage.NewVectorIndex(singleStoreDB, 100, 5*time.Second)
+	modelManager := ml.NewModelManager(10)
+	vectorGen := vector.NewGenerator(vectorConfig, modelManager, vectorIndex)
+
+	// Initialize frame processor
+	frameProcessor := frame.NewProcessor(processorConfig, vectorGen, modelManager, vectorIndex)
+
+	// Initialize frame processor
+	// Initialize video service with both Redis and SingleStore
+	videoService, err := video.NewVideoService(
 		cfg.UploadsDir,
 		cfg.FramesDir,
 		redis,
 		cfg.FrameRate,
 		cfg.JpegQuality,
+		db, // SingleStore connection
+		frameProcessor,
 	)
 	log.Printf("Video service initialized with uploads dir: %s, frames dir: %s",
 		cfg.UploadsDir,
@@ -78,12 +123,8 @@ func main() {
 	)
 
 	// Create context with cancellation
-	// errorHandler := errors.NewErrorHandler(log.Default())
-
-	// Start error processing
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	// errorHandler.StartProcessing(ctx)
 
 	// Error channel for service errors
 	errChan := make(chan error, 1)

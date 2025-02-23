@@ -136,3 +136,66 @@ func (vi *VectorIndex) backgroundFlush() {
 		}
 	}
 }
+
+func (v *VectorIndex) GetVector(ctx context.Context, id string) ([]float32, error) {
+	query := `
+        SELECT vector
+        FROM frame_vectors
+        WHERE frame_id = ?
+    `
+
+	var vectorBytes []byte
+	err := v.db.db.QueryRowContext(ctx, query, id).Scan(&vectorBytes)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("vector not found for id: %s", id)
+		}
+		return nil, fmt.Errorf("failed to get vector: %w", err)
+	}
+
+	// Convert bytes back to vector
+	vector := bytesToVector(vectorBytes)
+
+	return vector, nil
+}
+
+func (v *VectorIndex) StoreVector(context.Context, string, []float32) error {
+	// Implementation here
+	return nil
+}
+
+func (v *VectorIndex) BatchStore(ctx context.Context, vectors map[string][]float32) error {
+	// Implementation here
+	return nil
+}
+
+// Add the missing FindSimilar method
+func (v *VectorIndex) FindSimilar(ctx context.Context, vector []float32, limit int) ([]string, error) {
+	query := `
+        SELECT frame_id, DOT_PRODUCT(vector, ?) as similarity
+        FROM frame_vectors
+        ORDER BY similarity DESC
+        LIMIT ?
+    `
+
+	// Convert vector to bytes for storage
+	vectorBytes := vectorToBytes(vector)
+
+	rows, err := v.db.db.QueryContext(ctx, query, vectorBytes, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []string
+	for rows.Next() {
+		var id string
+		var similarity float64
+		if err := rows.Scan(&id, &similarity); err != nil {
+			return nil, err
+		}
+		results = append(results, id)
+	}
+
+	return results, nil
+}

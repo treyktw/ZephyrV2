@@ -5,6 +5,7 @@ use sqlx::mysql::MySqlPool;
 use sqlx::Row;
 use std::sync::Arc;
 
+#[derive(Clone)]
 pub struct VectorIndexService {
     db: Arc<MySqlPool>,
 }

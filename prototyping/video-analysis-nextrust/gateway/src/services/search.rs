@@ -6,6 +6,7 @@ use std::sync::Arc;
 
 use sqlx::Row;
 
+#[derive(Clone)]
 pub struct VectorSearchService {
     db: Arc<MySqlPool>,
 }

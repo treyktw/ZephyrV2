@@ -60,6 +60,12 @@ func NewSingleStoreDB(cfg SingleStoreConfig) (*SingleStoreDB, error) {
 	}, nil
 }
 
+func NewSingleStoreDBWithConnection(db *sql.DB) *SingleStoreDB {
+	return &SingleStoreDB{
+		db: db,
+	}
+}
+
 func (s *SingleStoreDB) BeginTx(ctx context.Context, opts *sql.TxOptions) (*sql.Tx, error) {
 	return s.db.BeginTx(ctx, opts)
 }

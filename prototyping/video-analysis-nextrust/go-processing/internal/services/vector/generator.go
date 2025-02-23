@@ -79,8 +79,7 @@ func (g *Generator) GenerateVectorBatch(ctx context.Context, frames []models.Fra
 			batch[j].Vector = vector
 			results[i+j] = batch[j]
 			// Store vector in database
-			metadata := batch[j].Metadata
-			if err := g.storage.StoreVector(ctx, batch[j].ID, vector, metadata); err != nil {
+			if err := g.storage.StoreVector(ctx, batch[j].ID, vector); err != nil {
 				return nil, fmt.Errorf("failed to store vector: %w", err)
 			}
 		}

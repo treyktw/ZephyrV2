@@ -3,6 +3,7 @@ package video
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -24,9 +25,13 @@ type VideoProcessor struct {
 	frameMetadata   *frame.MetadataHandler
 	metadataHandler *VideoMetadataHandler
 	redis           *storage.RedisClient
+	frameRate       float64
+	quality         int
+	db              *sql.DB
+	frameStore      *storage.FrameRelationship // Use the new type
 }
 
-func NewVideoProcessor(config config.ProcessorConfigVideo) *VideoProcessor {
+func NewVideoProcessor(config config.ProcessorConfigVideo, db *sql.DB) *VideoProcessor {
 	metadataHandler := NewVideoMetadataHandler(config.RedisClient)
 	frameMetadata := frame.NewMetadataHandler(config.RedisClient)
 
@@ -37,6 +42,10 @@ func NewVideoProcessor(config config.ProcessorConfigVideo) *VideoProcessor {
 		frameMetadata:   frameMetadata,
 		metadataHandler: metadataHandler,
 		redis:           config.RedisClient,
+		frameRate:       config.ExtractorConfig.FrameRate,
+		quality:         config.ExtractorConfig.OutputQuality,
+		db:              db,
+		frameStore:      storage.NewFrameRelationship(db),
 	}
 }
 

@@ -2,9 +2,11 @@ package video
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
+	"zephyrV2/internal/config"
 	"zephyrV2/internal/models"
 	"zephyrV2/internal/services/frame"
 	"zephyrV2/internal/services/storage"
@@ -18,24 +20,42 @@ type VideoService struct {
 	quality        int
 	processor      *VideoProcessor
 	frameProcessor *frame.Processor
+	db             *sql.DB // Add this
 }
 
-func NewVideoService(uploadsDir, framesDir string, redis *storage.RedisClient, frameRate float64, quality int) *VideoService {
+func NewVideoService(
+	uploadsDir string,
+	framesDir string,
+	redis *storage.RedisClient,
+	frameRate float64,
+	quality int,
+	db *sql.DB,
+	frameProcessor *frame.Processor,
+) (*VideoService, error) {
+	// Create processor config
+	processorConfig := config.ProcessorConfigVideo{
+		UploadsDir:  uploadsDir,
+		FramesDir:   framesDir,
+		RedisClient: redis,
+		ExtractorConfig: frame.ExtractorConfig{
+			FrameRate:     frameRate,
+			OutputQuality: quality,
+		},
+	}
 
-	if frameRate <= 0 {
-		frameRate = 1.0 // Default to 1 frame per second
-	}
-	if quality < 1 || quality > 31 {
-		quality = 2 // Default to high quality
-	}
+	// Initialize the processor
+	processor := NewVideoProcessor(processorConfig, db)
 
 	return &VideoService{
-		uploadsDir: uploadsDir,
-		framesDir:  framesDir,
-		redis:      redis,
-		frameRate:  frameRate,
-		quality:    quality,
-	}
+		uploadsDir:     uploadsDir,
+		framesDir:      framesDir,
+		redis:          redis,
+		processor:      processor,
+		frameRate:      frameRate,
+		quality:        quality,
+		frameProcessor: frameProcessor,
+		db:             db,
+	}, nil
 }
 
 func (s *VideoService) StartProcessing(ctx context.Context) error {

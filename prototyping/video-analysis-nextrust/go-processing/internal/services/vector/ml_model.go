@@ -9,16 +9,8 @@ import (
 
 // Model defines the interface for ML models
 type Model interface {
-	// Generate embedding for single image
 	GenerateEmbedding(ctx context.Context, img image.Image) ([]float32, error)
-
-	// Generate embeddings for batch of images
 	GenerateEmbeddingBatch(ctx context.Context, images []image.Image) ([][]float32, error)
-
-	// Get vector dimension
-	VectorDimension() int
-
-	// Model info
 	ModelInfo() ModelInfo
 }
 

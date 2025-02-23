@@ -3,6 +3,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 )
 
@@ -12,6 +13,13 @@ type FrameRelationship struct {
 	RelatedFrame string
 	Strength     float64
 	Metadata     json.RawMessage
+	db           *sql.DB
+}
+
+func NewFrameRelationship(db *sql.DB) *FrameRelationship {
+	return &FrameRelationship{
+		db: db,
+	}
 }
 
 func (s *SingleStoreDB) StoreFrameRelationship(ctx context.Context, rel FrameRelationship) error {
