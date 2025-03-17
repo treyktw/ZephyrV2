@@ -2,9 +2,7 @@
 
 An advanced educational platform providing AI-powered learning assistance, offline-capable note-taking, intelligent scheduling, and comprehensive study tools for high school and college students.
 
-<p align="center">
-  <img src="/api/placeholder/800/300" alt="ZephyrV2 Platform" />
-</p>
+![ZephyrV2 Platform](/api/placeholder/800/300)
 
 ## 📚 Overview
 
@@ -338,7 +336,7 @@ packages:
 
 ### Environment Configuration
 
-```env
+```
 # .env.example
 NEXT_PUBLIC_API_URL=http://localhost:3000
 NEXT_PUBLIC_WS_URL=ws://localhost:4000
