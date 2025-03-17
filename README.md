@@ -1,3 +1,7 @@
+
+⚠️ Disclaimer
+This is a DEMO and not the full implementation of the actual application, if you wish to be a contributor contact me directly as this is not open sourced at the moment!
+
 # ZephyrV2
 An advanced educational platform providing AI-powered learning assistance, offline-capable note-taking, intelligent scheduling, and comprehensive study tools for high school and college students.
 
