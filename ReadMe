@@ -1,141 +1,416 @@
-# ZephyrV2 - Advanced Educational Platform
+# ZephyrV2
 
-ZephyrV2 is a comprehensive educational platform that combines AI-powered learning assistance, offline-capable note-taking, intelligent scheduling, and advanced study tools for high school and college students.
+An advanced educational platform providing AI-powered learning assistance, offline-capable note-taking, intelligent scheduling, and comprehensive study tools for high school and college students.
 
-## 🚀 Key Features
+<p align="center">
+  <img src="/api/placeholder/800/300" alt="ZephyrV2 Platform" />
+</p>
 
-### AI Learning Assistance
-- Multi-specialized AI chatbots (General, Math/Physics, CS, Document Analysis)
-- Real-time code analysis and compilation
-- LaTeX equation rendering and solving
-- Document analysis and summarization
-- Video/audio lecture analysis with auto-timestamping
+## 📚 Overview
 
-### Note-Taking System
-- Rich text editing with Markdown support
-- Offline-first architecture with sync
-- Mathematical equation support
-- Code blocks with syntax highlighting
-- Voice recording and transcription
-- Version control and history
+ZephyrV2 is designed to be a comprehensive educational platform that combines AI assistance, offline capabilities, and powerful organizational tools to support students in their academic journey.
 
-### Study Tools
-- AI-powered flashcard generation
-- Intelligent test creation
-- Interactive math/physics visualization
-- Real-time collaboration
-- Smart document organization
-- Citation management
+### Core Features
 
-### Calendar & Planning
-- AI-optimized scheduling
-- Study time allocation
-- Smart break reminders
-- External calendar integration
-- Workload balancing
+- **Multi-specialized AI chatbots** for subject-specific assistance
+- **Offline-capable note-taking system** for continuous productivity
+- **Intelligent calendar and planning** with AI-powered scheduling
+- **Document analysis and summarization** for efficient studying
+- **Interactive math and physics tools** with visualization
+- **Online IDE with compilation support** for CS students
+- **Video/audio lecture analysis** for content extraction
+- **Smart flashcards and test generation** for effective revision
 
-## 🛠 Technology Stack
+## 🏗️ Technical Architecture
 
-### Frontend
-- **Web Application**
+### Technology Stack
+
+#### Frontend
+- **Web Application**:
   - Next.js 14+ with TypeScript
-  - Tailwind CSS
-  - shadcn/ui components
-  - WebAssembly (Rust)
-  - Service Workers
-  - IndexedDB & SQLite
+  - Tailwind CSS with shadcn/ui components
+  - WebAssembly (Rust) for performance-critical operations
+  - Service Workers for offline support
+  - IndexedDB & SQLite for local storage
 
-- **Mobile Application**
+- **Mobile Application**:
   - React Native
-  - SQLite
-  - Background services
+  - SQLite for local storage
+  - Background services for sync
   - Push notifications
 
-### Backend
-- **API Gateway & Core Services**
-  - Go (Fiber/Chi)
-  - GORM
-  - JWT authentication
+#### Backend
+- **API Gateway & Core Services** (Go):
+  - Fiber/Chi for HTTP routing
+  - GORM for database operations
+  - JWT authentication & security
+  - Rate limiting
+  - Request validation
 
-- **Real-time Services**
-  - Elixir (Phoenix)
-  - WebSocket
+- **Real-time Services** (Elixir):
+  - Phoenix Framework
+  - Phoenix Channels for WebSocket
+  - GenServer for state management
   - PubSub system
 
-- **Computation Services**
-  - Rust (Actix-web)
-  - WebAssembly
+- **Computation Services** (Rust):
+  - Actix-web framework
+  - tokio for async runtime
+  - WebAssembly compilation
   - Math computation engine
 
-- **Cache & State**
-  - Gleam
-  - Redis
+- **Cache & State Management** (Gleam):
   - Distributed state handling
+  - Efficient cache management
+  - Data transformations
 
 ### Database & Storage
-- PostgreSQL (Primary Database)
-- Redis (Cache Layer)
-- S3/GCS (File Storage)
-- CDN integration
 
-## 🔒 Security Features
-- End-to-end encryption
+- **Primary Database (PostgreSQL)**: 
+  - User accounts and authentication
+  - Educational content
+  - Application settings
+  - Analytics data
+
+- **Cache Layer**:
+  - Redis for distributed caching
+  - Local browser cache
+  - Service worker cache
+
+- **File Storage**:
+  - S3/GCS for document storage
+  - CDN for static assets
+  - Local storage for offline access
+
+## 🧠 System Components
+
+### AI System
+
+#### Chatbot Services
+
+- **General Purpose Assistant**:
+  - General academic guidance
+  - Study tips and recommendations
+  - Research assistance
+
+- **Math & Physics Assistant**:
+  - LaTeX equation rendering
+  - Graph visualization
+  - Step-by-step problem solving
+  - Interactive 3D visualization
+
+- **Computer Science Assistant**:
+  - Code completion
+  - Syntax highlighting
+  - Multiple language support
+  - Online compilation
+
+- **Document Analysis Assistant**:
+  - Multi-format support (PDF, DOCX, PPTX)
+  - Key point extraction
+  - Summary generation
+  - Citation management
+
+### Offline-First System
+
+#### Local Storage
+- SQLite for structured data
+- IndexedDB for document cache
+- Service Worker for asset caching
+
+#### Sync System
+- Background sync for notes
+- Conflict resolution
+- Delta updates
+- Version control
+
+### Calendar System
+
+#### Features
+- AI-powered schedule optimization
+- Study time allocation
+- Break reminders
+- Deadline management
+- Integration with external calendars
+
+#### Intelligence Layer
+- Machine learning for pattern recognition
+- Personalized scheduling
+- Workload balancing
+- Smart notifications
+
+## 🔒 Security & Privacy
+
+### Authentication
 - JWT-based authentication
 - OAuth2 support
 - MFA integration
-- At-rest encryption
-- Client-side encryption
+- Session management
+
+### Data Protection
+- End-to-end encryption for messages
+- At-rest encryption for stored data
+- Client-side encryption for offline data
+- Regular security audits
+
+## 📈 Scalability & Performance
+
+### Infrastructure
+- Docker containerization
+- Kubernetes orchestration
+- Horizontal scaling
+- Load balancing
+- CDN integration
+
+### Performance Optimization
+- Edge caching
+- Lazy loading
+- Image optimization
+- Code splitting
+- WASM for compute-intensive tasks
 
 ## 📊 Monitoring & Analytics
+
+### System Monitoring
 - Prometheus metrics
 - Grafana dashboards
 - Error tracking
-- Usage analytics
+- Performance monitoring
+
+### Usage Analytics
+- User engagement metrics
+- Feature usage tracking
+- Performance analytics
 - A/B testing support
+
+## 👩‍💻 Development Workflow
+
+### Version Control
+- Monorepo structure
+- Feature branching
+- Automated testing
+- CI/CD pipelines
+
+### Documentation
+- API documentation
+- Component documentation
+- Architecture diagrams
+- Contribution guidelines
+
+## 🚀 Future Considerations
+
+### Planned Features
+- AR/VR support for visualization
+- AI-powered study group matching
+- Integrated plagiarism detection
+- Advanced analytics dashboard
+
+### Scalability Plans
+- Geographic expansion
+- Multi-tenant support
+- Custom deployment options
+- API marketplace
+
+## 🗓️ Implementation Phases
+
+### Phase 1: Core Platform (3 months)
+- Basic user authentication
+- Note-taking system
+- General purpose AI chatbot
+- Basic calendar functionality
+
+### Phase 2: Advanced Features (3 months)
+- Specialized AI chatbots
+- Document analysis
+- Online IDE
+- Offline capabilities
+
+### Phase 3: Mobile & Integration (2 months)
+- Mobile app development
+- Third-party integrations
+- Advanced AI features
+- Performance optimization
+
+### Phase 4: Enhancement & Scale (2 months)
+- Advanced analytics
+- Additional AI capabilities
+- Scale infrastructure
+- Enhanced security features
+
+## 📁 Project Structure
+
+```
+zephyr-v2/
+├── .github/                          # GitHub specific configuration
+│   ├── workflows/                    # GitHub Actions CI/CD
+│   └── ISSUE_TEMPLATE/              # Issue templates
+│
+├── apps/                            # Application packages
+│   ├── web/                         # Next.js web application
+│   │   ├── src/
+│   │   │   ├── app/                # Next.js 14 app directory
+│   │   │   │   ├── (auth)/        # Authentication routes
+│   │   │   │   ├── (dashboard)/   # Dashboard routes
+│   │   │   │   ├── (marketing)/   # Marketing pages
+│   │   │   │   └── api/          # API routes
+│   │   │   ├── components/
+│   │   │   ├── lib/
+│   │   │   ├── hooks/
+│   │   │   └── ...
+│   ├── mobile/                      # React Native application
+│   └── docs/                        # Documentation site
+│
+├── services/                        # Backend services
+│   ├── gateway/                     # Go API Gateway
+│   ├── realtime/                    # Elixir Real-time Service
+│   ├── compute/                     # Rust Computation Service
+│   └── cache/                       # Gleam Cache Service
+│
+├── packages/                        # Shared packages
+│   ├── ui/                          # Shared UI library
+│   ├── ai/                          # AI utilities
+│   ├── tsconfig/                    # Shared TypeScript configs
+│   ├── eslint-config/               # Shared ESLint configs
+│   └── utils/                       # Shared utilities
+│
+├── infrastructure/                  # Infrastructure configuration
+│   ├── docker/
+│   ├── kubernetes/
+│   └── terraform/                   # IaC
+│
+├── tools/                           # Development tools
+│
+├── docker-compose.yml               # Local development setup
+├── package.json                     # Root package.json
+├── pnpm-workspace.yaml              # PNPM workspace config
+└── turbo.json                       # Turborepo config
+```
+
+## ⚙️ Key Configuration Files
+
+### Root Configuration
+
+```json
+// package.json
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.0"
+  }
+}
+```
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'services/*'
+```
+
+```json
+// turbo.json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
+```
+
+### Environment Configuration
+
+```env
+# .env.example
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_WS_URL=ws://localhost:4000
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/zephyr
+REDIS_URL=redis://localhost:6379
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
-- Go 1.21+
-- Rust
-- Docker & Docker Compose
-- PostgreSQL 15+
-- Redis
+- PNPM
+- Docker and Docker Compose
+- Go 1.20+
+- Rust (latest stable)
+- Elixir 1.14+
+- Gleam (latest)
 
 ### Development Setup
-```bash
-# Clone the repository
-git clone https://github.com/your-org/zephyr-v2.git
 
-# Install dependencies
-pnpm install
+1. Clone the repository
+   ```bash
+   git clone https://github.com/your-org/zephyr-v2.git
+   cd zephyr-v2
+   ```
 
-# Start development environment
-docker-compose up -d
-pnpm dev
-```
+2. Install dependencies
+   ```bash
+   pnpm install
+   ```
 
-## 📁 Project Structure
-```
-zephyr-v2/
-├── apps/                # Applications
-│   ├── web/            # Next.js web app
-│   ├── mobile/         # React Native app
-│   └── docs/           # Documentation site
-├── services/           # Backend services
-├── infrastructure/     # Infrastructure configs
-└── tools/             # Development tools
-```
+3. Set up environment variables
+   ```bash
+   cp .env.example .env.local
+   ```
 
-## 📚 Documentation
-- [Technical Architecture](./docs/architecture.md)
-- [API Documentation](./docs/api.md)
-- [Development Guide](./docs/development.md)
-- [Deployment Guide](./docs/deployment.md)
+4. Start the development environment
+   ```bash
+   docker-compose up -d
+   pnpm dev
+   ```
 
-## 🤝 Contributing
-Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+5. Access the application
+   - Web: http://localhost:3000
+   - API: http://localhost:4000
+   - Documentation: http://localhost:5000
 
-## 📄 License
-This project is licensed under the MIT License - see the [LICENSE.md](./LICENSE.md) file for details.
+## 🔧 Additional Information
+
+### Service-specific Files
+
+- Go services: `go.mod` and `go.sum`
+- Rust services: `Cargo.toml` and `Cargo.lock`
+- Elixir services: `mix.exs`
+- Gleam services: `gleam.toml`
+
+### Package Structure
+
+Each package and service will have its own:
+- `package.json`
+- Testing configuration
+- TypeScript configuration
+- Environment files
+
+### Development Tools
+
+The development environment is configured with:
+- Docker Compose for local development
+- Make commands for common tasks
+- Development scripts in the `tools` directory
+
+## 📝 License
+
+[MIT](LICENSE)
